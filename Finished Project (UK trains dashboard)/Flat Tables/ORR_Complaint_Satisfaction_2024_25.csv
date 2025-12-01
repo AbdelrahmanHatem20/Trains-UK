@@ -1,0 +1,14 @@
+Metric,Question,Satisfied_%,Neither_%,Dissatisfied_%,Responses
+"Overall Handling Process","Q2) Overall, how satisfied with the way your complaint was handled?",31,18,51,22903
+"Outcome Satisfaction","Q1) How satisfied with the outcome of your complaint?",29,12,59,22903
+"Ease of Making Complaint","Q3) The ease with which you were able to make the complaint",58,17,25,22852
+"Time Taken to Resolve","Q4) The time taken to deal with your complaint",45,20,35,22620
+"Complaint Taken Seriously","Q5) Your complaint was taken seriously",34,16,51,22342
+"Fully Addressed","Q6) Your complaint was fully addressed by the operator",28,14,58,22305
+"Keen to Resolve","Q7) The operator seemed keen to reach an agreeable outcome",27,18,55,21790
+"Staff Politeness","Q8) The operator was polite",68,20,12,22307
+"Staff Helpfulness","Q9) The operator was helpful or knowledgeable",34,27,40,22106
+"Kept Informed","Q10) Being kept informed appropriately about the progress",32,28,40,21724
+"Clarity of Information","Q11) The clarity of information provided",32,23,44,22115
+"Promised Info Delivered","Q12) The operator provided any information they promised",34,38,28,18550
+"Feel More Negative After Complaint","Q13) Did the way the operator handled your complaint make you feel more negative?",58,30,11,32617
