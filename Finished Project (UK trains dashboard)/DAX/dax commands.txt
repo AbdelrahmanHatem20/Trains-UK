@@ -1,0 +1,94 @@
+// 2. PPM – Public Performance Measure (Official UK Definition)
+PPM = 
+DIVIDE(
+    [On Time] + [Delayed],
+    [Total Journeys]
+)
+
+PPM (%) = [PPM]        // ← Format this one as Percentage with 1 decimal
+
+
+// 3. Right-Time Performance (arrival within 59 seconds)
+Right Time Performance = 
+DIVIDE(
+    [On Time],
+    [Total Journeys]
+)
+
+Right Time (%) = [Right Time Performance]    // ← Format as Percentage
+
+
+// 4. Bonus quick ones
+Cancellation Rate (%) = 
+DIVIDE([Cancelled], [Total Journeys])
+
+Delayed Rate (%) = 
+DIVIDE([Delayed], [Total Journeys])
+
+Avg Time Between Cancellations = 
+VAR TotalCancelled = [Cancelled]
+VAR PeriodStart = MIN(journeys[Date_of_Journey])
+VAR PeriodEnd   = MAX(journeys[Date_of_Journey])
+VAR TotalDays   = DATEDIFF(PeriodStart, PeriodEnd, DAY) + 1
+VAR TotalMinutes = TotalDays * 1440   // 24 × 60
+
+VAR AvgMinutes = DIVIDE(TotalMinutes, TotalCancelled)
+
+RETURN
+SWITCH(
+    TRUE(),
+    TotalCancelled = 0,                               BLANK(),
+    AvgMinutes < 120,                                 ROUND(AvgMinutes, 0) & " minutes",
+    AvgMinutes < 2880,                                ROUND(AvgMinutes / 60, 1) & " hours",
+    AvgMinutes < 10080,                               ROUND(AvgMinutes / 1440, 1) & " days",
+    ROUND(AvgMinutes / 10080, 1) & " weeks"
+)
+
+
+Complaint Sentiment % = 
+SWITCH(
+    SELECTEDVALUE('Complaint Sentiment Impact'[Sentiment]),
+    "More negative after complaint", 
+        CALCULATE(
+            MAX('ORR_Complaint_Satisfaction_2024_25'[Dissatisfied_%]),
+            'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Feel More Negative After Complaint"
+        ),
+    "More positive after complaint", 
+        CALCULATE(
+            MAX('ORR_Complaint_Satisfaction_2024_25'[Satisfied_%]),
+            'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Feel More Negative After Complaint"
+        ),
+    "No change", 30,
+    BLANK()
+)
+
+
+Overall Complaint Handling = 
+CALCULATE(MAX('ORR_Complaint_Satisfaction_2024_25'[Satisfied_%]),
+         'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Overall Handling Process")
+
+Staff Politeness = 
+CALCULATE(MAX('ORR_Complaint_Satisfaction_2024_25'[Satisfied_%]),
+         'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Staff Politeness")
+
+Problem Fully Solved = 
+CALCULATE(MAX('ORR_Complaint_Satisfaction_2024_25'[Satisfied_%]),
+         'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Fully Addressed")
+
+% Feel Worse After Contact = 
+CALCULATE(MAX('ORR_Complaint_Satisfaction_2024_25'[Dissatisfied_%]),
+         'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Feel More Negative After Complaint")
+
+Net Sentiment Score = 
+VAR Positive = CALCULATE(MAX('ORR_Complaint_Satisfaction_2024_25'[Satisfied_%]),
+                       'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Feel More Negative After Complaint")
+VAR Negative = [% Feel Worse After Contact]
+RETURN Negative - Positive
+
+
+otential Brand Damage = 
+[Delayed Journeys] * 
+CALCULATE(
+    MAX('ORR_Complaint_Satisfaction_2024_25'[Dissatisfied_%]) / 100,
+    'ORR_Complaint_Satisfaction_2024_25'[Metric] = "Feel More Negative After Complaint"
+)
